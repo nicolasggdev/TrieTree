@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { FaSearch, FaChevronRight } from 'react-icons/fa';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { FaSearch, FaChevronRight } from "react-icons/fa";
 
-import { TrieTree } from '../assets/TrieTree';
+import { TrieTree } from "../assets/TrieTree";
 
 const SearchContainer = styled.div`
   display: flex;
@@ -78,16 +79,17 @@ const ListingDivider = styled.div`
 `;
 // **** END SEARCH BAR STYLES ****
 
-const handleTermSubmit = (e, search, setSearch, disableTermSubmit) => {
+const handleTermSubmit = (e, search, setSearch, disableTermSubmit, words) => {
   //Agregar una palabra (string) en el trie tree
   e.preventDefault();
 
   const { searchTree, searchTerm } = search;
 
   if (!disableTermSubmit) {
-    searchTree.insert(searchTerm);
+    words.push(searchTerm);
+    //searchTree.insert(searchTerm);
   }
-  setSearch({ searchTree, searchTerm: '' });
+  setSearch({ searchTree, searchTerm: "" });
 };
 
 const handleTermChange = (e, searchTree, setSearch, onChange) => {
@@ -124,19 +126,17 @@ const displayResults = (searchResults) => {
 
 export function SearchBar(props) {
   const {
-    placeholder = 'Búsqueda...',
-    type = 'text',
+    placeholder = "Búsqueda...",
+    type = "text",
     words = [],
     disableTermSubmit = false,
   } = props;
-
-  //Estado 
   //Creamos un nuevo TrieTree
   //searchTerm -> el prefijo a buscar
   //searchWords -> false significa que no estamos haciendo una busqueda
   const [search, setSearch] = useState({
     searchTree: new TrieTree(),
-    searchTerm: '',
+    searchTerm: "",
     searchWords: false,
   });
 
@@ -150,10 +150,10 @@ export function SearchBar(props) {
   const searchResults = searchTree.complete(searchTerm);
 
   useEffect(() => {
-    document.addEventListener('keydown', (e) => e.stopPropagation(), true);
+    document.addEventListener("keydown", (e) => e.stopPropagation(), true);
 
     return () => {
-      document.removeEventListener('keydown', (e) => e.stopPropagation(), true);
+      document.removeEventListener("keydown", (e) => e.stopPropagation(), true);
     };
   }, []);
 
@@ -164,7 +164,7 @@ export function SearchBar(props) {
       </span>
       <form
         onSubmit={(e) =>
-          handleTermSubmit(e, search, setSearch, disableTermSubmit)
+          handleTermSubmit(e, search, setSearch, disableTermSubmit, words)
         }
       >
         <SearchInput
